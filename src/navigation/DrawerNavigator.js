@@ -16,7 +16,7 @@ export default function DrawerNavigator() {
         drawerInactiveTintColor: "#AAAAAA",
       }}
     >
-      <Drawer.Screen name="Home" component={BottomTabNavigator} />
+      <Drawer.Screen name="Twitter" component={BottomTabNavigator} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
     </Drawer.Navigator>
   );

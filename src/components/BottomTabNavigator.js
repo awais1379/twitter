@@ -1,9 +1,9 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FeedScreen from "../screens/FeedScreen";
-import SearchScreen from "../screens/SearchScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import Icon from "react-native-vector-icons/Ionicons"; // Using Ionicons for tab icons
+import SearchStack from "../navigation/SearchStack";
+import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -11,39 +11,34 @@ export default function BottomTabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarStyle: { backgroundColor: "#31263E" },
+        tabBarStyle: {
+          backgroundColor: "#31263E",
+          borderTopWidth: 0,
+        },
         tabBarActiveTintColor: "#FFFFFF",
         tabBarInactiveTintColor: "#AAAAAA",
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ color, size }) => {
           let iconName;
 
           if (route.name === "Feed") {
-            iconName = focused ? "home" : "home-outline";
+            iconName = "home";
           } else if (route.name === "Search") {
-            iconName = focused ? "search" : "search-outline";
+            iconName = "search";
           } else if (route.name === "Profile") {
-            iconName = focused ? "person" : "person-outline";
+            iconName = "person";
           }
 
-          return <Icon name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
     >
-      <Tab.Screen
-        name="Feed"
-        component={FeedScreen}
-        options={{ headerShown: false }}
-      />
+      <Tab.Screen name="Feed" component={FeedScreen} options={{ headerShown: false }}/>
       <Tab.Screen
         name="Search"
-        component={SearchScreen}
+        component={SearchStack}
         options={{ headerShown: false }}
       />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{ headerShown: false }}
-      />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
 }
