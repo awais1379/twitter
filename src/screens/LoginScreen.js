@@ -2,27 +2,59 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+
+const db = getFirestore();
 
 export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState("");
+  const [input, setInput] = useState(""); // Can be email or username
   const [password, setPassword] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
 
   const validateFields = () => {
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      setValidationMessage("Please enter a valid email address.");
-      return false;
-    }
-    if (!password || password.length < 6) {
-      setValidationMessage("Password must be at least 6 characters.");
+    if (!input || !password || password.length < 6) {
+      setValidationMessage(
+        "Please enter a valid username/email and a password of at least 6 characters."
+      );
       return false;
     }
     setValidationMessage(""); // Clear validation message
     return true;
   };
 
+  const fetchEmailFromUsername = async (username) => {
+    const q = query(
+      collection(db, "users"),
+      where("username", "==", username.trim())
+    );
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      throw new Error("No account found with this username.");
+    }
+    const userData = querySnapshot.docs[0].data();
+    return userData.email; // Return the email associated with the username
+  };
+
   const handleLogin = async () => {
     if (!validateFields()) return;
+
+    let email = input.trim(); // Default to email
+
+    // Check if input is a username (not an email)
+    if (!/\S+@\S+\.\S+/.test(input)) {
+      try {
+        email = await fetchEmailFromUsername(input); // Convert username to email
+      } catch (error) {
+        setValidationMessage(error.message);
+        return;
+      }
+    }
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -33,10 +65,7 @@ export default function LoginScreen({ navigation }) {
           setValidationMessage("The email address is badly formatted.");
           break;
         case "auth/user-not-found":
-          setValidationMessage("No account found with this email.");
-          break;
-        case "auth/invalid-credential":
-          setValidationMessage("No account found with this email.");
+          setValidationMessage("No account found with this email/username.");
           break;
         case "auth/wrong-password":
           setValidationMessage("Incorrect password. Please try again.");
@@ -51,11 +80,10 @@ export default function LoginScreen({ navigation }) {
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
       <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
+        placeholder="Username or Email"
+        value={input}
+        onChangeText={setInput}
         style={styles.input}
-        keyboardType="email-address"
         autoCapitalize="none"
       />
       <TextInput

@@ -1,14 +1,35 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  setDoc,
+  doc,
+} from "firebase/firestore";
+
+const db = getFirestore();
 
 export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const validateFields = () => {
+  const validateFields = async () => {
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setValidationMessage("Please enter a valid email address.");
       return false;
@@ -17,17 +38,59 @@ export default function SignupScreen({ navigation }) {
       setValidationMessage("Password must be at least 6 characters.");
       return false;
     }
+    if (!username || username.length < 3) {
+      setValidationMessage("Username must be at least 3 characters.");
+      return false;
+    }
+
+    // Check username uniqueness
+    const q = query(
+      collection(db, "users"),
+      where("username", "==", username.trim())
+    );
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      setValidationMessage("Username is already taken. Please choose another.");
+      return false;
+    }
+
     setValidationMessage(""); // Clear validation message
     return true;
   };
 
   const handleSignup = async () => {
-    if (!validateFields()) return;
+    setValidationMessage(""); // Clear previous messages
+    setLoading(true);
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const isValid = await validateFields();
+      if (!isValid) {
+        setLoading(false);
+        return;
+      }
+
+      // Create user with Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
+      );
+      const user = userCredential.user;
+
+      // Add user to Firestore
+      const userDoc = doc(db, "users", user.uid); // Use UID as document ID for easy lookups
+      await setDoc(userDoc, {
+        userId: user.uid,
+        username: username.trim(),
+        email: email.trim(),
+        createdAt: new Date(), // Optional: Store account creation timestamp
+      });
+
+      setLoading(false);
+      Alert.alert("Success", "Your account has been created!");
       navigation.replace("Main"); // Navigate to Main screen
     } catch (error) {
+      setLoading(false);
       switch (error.code) {
         case "auth/email-already-in-use":
           setValidationMessage("This email is already in use.");
@@ -62,12 +125,22 @@ export default function SignupScreen({ navigation }) {
         secureTextEntry
         style={styles.input}
       />
+      <TextInput
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+        style={styles.input}
+      />
       {validationMessage ? (
         <Text style={styles.validationMessage}>{validationMessage}</Text>
       ) : null}
-      <View style={styles.buttonContainer}>
-        <Button title="Sign Up" onPress={handleSignup} color="#007BFF" />
-      </View>
+      {loading ? (
+        <ActivityIndicator size="large" color="#007BFF" />
+      ) : (
+        <View style={styles.buttonContainer}>
+          <Button title="Sign Up" onPress={handleSignup} color="#007BFF" />
+        </View>
+      )}
       <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
         Already have an account? Log in
       </Text>

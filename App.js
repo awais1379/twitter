@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { auth } from "./src/firebase/firebaseConfig";
 import AuthStack from "./src/navigation/AuthStack";
-import MainStack from "./src/navigation/MainStack";
+import DrawerNavigator from "./src/navigation/DrawerNavigator";
 
 export default function App() {
   const [user, setUser] = React.useState(null);
@@ -16,7 +16,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {user ? <MainStack /> : <AuthStack />}
+      {user ? <DrawerNavigator /> : <AuthStack />}
     </NavigationContainer>
   );
 }
