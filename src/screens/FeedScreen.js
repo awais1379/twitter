@@ -6,9 +6,8 @@ import {
   Text,
   Modal,
   TextInput,
-  Button,
-  StyleSheet,
   Alert,
+  StyleSheet,
 } from "react-native";
 import TweetCard from "../components/TweetCard";
 import { auth } from "../firebase/firebaseConfig";
@@ -21,6 +20,7 @@ import {
   addDoc,
   serverTimestamp,
 } from "firebase/firestore";
+import { Ionicons } from "@expo/vector-icons";
 
 const db = getFirestore();
 
@@ -70,6 +70,7 @@ export default function FeedScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Tweets List */}
       <FlatList
         data={tweets}
         renderItem={({ item }) => (
@@ -81,28 +82,38 @@ export default function FeedScreen() {
         )}
         keyExtractor={(item) => item.id}
       />
+
+      {/* Add Tweet Button */}
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.addButtonText}>+</Text>
+        <Ionicons name="add" size={32} color="#FFFFFF" />
       </TouchableOpacity>
+
+      {/* Add Tweet Modal */}
       <Modal visible={isModalVisible} animationType="slide" transparent>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Write a Tweet</Text>
             <TextInput
               style={styles.input}
               value={tweet}
               onChangeText={setTweet}
-              placeholder="Write your tweet..."
+              placeholder="What's happening?"
               placeholderTextColor="#AAAAAA"
+              maxLength={160}
+              multiline
             />
-            <Button title="Post Tweet" onPress={handleTweet} />
-            <Button
-              title="Cancel"
+            <TouchableOpacity style={styles.modalButton} onPress={handleTweet}>
+              <Text style={styles.modalButtonText}>Post</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.modalButton, styles.cancelButton]}
               onPress={() => setModalVisible(false)}
-              color="#FF4D4F"
-            />
+            >
+              <Text style={styles.modalButtonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -114,51 +125,67 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: "#31263E",
+    backgroundColor: "#1A1A1A", // Match dark grey theme
   },
   addButton: {
     position: "absolute",
     bottom: 20,
     right: 20,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#444444", // Dark grey button
     width: 60,
     height: 60,
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#007BFF",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
   },
-  addButtonText: {
-    color: "#007BFF",
-    fontSize: 30,
-    fontWeight: "bold",
-  },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    backgroundColor: "rgba(0, 0, 0, 0.8)", // Semi-transparent background
   },
   modalContent: {
-    width: "80%",
-    backgroundColor: "#FFFFFF",
+    width: "90%",
+    backgroundColor: "#1A1A1A",
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
   },
+  modalTitle: {
+    color: "#FFFFFF",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
   input: {
     width: "100%",
-    height: 40,
-    borderWidth: 1,
-    borderColor: "#AAAAAA",
-    marginBottom: 10,
+    backgroundColor: "#000000",
     borderRadius: 5,
     padding: 10,
+    color: "#FFFFFF",
+    marginBottom: 10,
+    textAlignVertical: "top",
+    height: 100,
+  },
+  modalButton: {
+    width: "100%",
+    backgroundColor: "#444444",
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  cancelButton: {
+    backgroundColor: "#FF4D4F",
+  },
+  modalButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

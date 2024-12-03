@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import TweetCard from "../components/TweetCard";
 import { auth } from "../firebase/firebaseConfig";
+import { Ionicons } from "@expo/vector-icons";
 import {
   getFirestore,
   collection,
@@ -80,6 +81,10 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Ionicons name="person-circle" size={50} color="#FFFFFF" />
+      </View>
+      <Text style={styles.headerText}>Your Tweets</Text>
       {userTweets.length > 0 ? (
         <FlatList
           data={userTweets}
@@ -91,6 +96,7 @@ export default function ProfileScreen() {
             />
           )}
           keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.tweetList}
         />
       ) : (
         <Text style={styles.noTweetsText}>
@@ -104,10 +110,22 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#31263E",
-    padding: 10,
-    justifyContent: "center",
+    backgroundColor: "#1A1A1A", // Dark background
+    padding: 20,
+  },
+  header: {
     alignItems: "center",
+    marginBottom: 20,
+  },
+  headerText: {
+    color: "#FFFFFF",
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  tweetList: {
+    paddingBottom: 20,
   },
   noTweetsText: {
     color: "#AAAAAA",

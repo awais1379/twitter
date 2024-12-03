@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import {
   getFirestore,
   collection,
@@ -67,13 +68,16 @@ export default function SearchScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search for a username..."
-        placeholderTextColor="#AAAAAA"
-        value={searchTerm}
-        onChangeText={setSearchTerm}
-      />
+      <View style={styles.searchBarContainer}>
+        <Ionicons name="search" size={20} color="#AAAAAA" style={styles.icon} />
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Search for a username..."
+          placeholderTextColor="#AAAAAA"
+          value={searchTerm}
+          onChangeText={setSearchTerm}
+        />
+      </View>
       {suggestedUsers.length > 0 ? (
         <FlatList
           data={suggestedUsers}
@@ -93,28 +97,38 @@ export default function SearchScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#31263E",
+    backgroundColor: "#1A1A1A", // Match dark grey theme
     padding: 20,
   },
-  searchBar: {
-    width: "100%",
-    padding: 10,
-    backgroundColor: "#44355B",
-    borderRadius: 5,
-    color: "#FFFFFF",
+  searchBarContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#000000",
+    borderRadius: 8,
+    paddingHorizontal: 10,
     marginBottom: 20,
+  },
+  searchBar: {
+    flex: 1,
+    padding: 10,
+    color: "#FFFFFF",
+  },
+  icon: {
+    marginRight: 10,
   },
   list: {
     paddingBottom: 20,
   },
   userItem: {
-    backgroundColor: "#44355B",
+    backgroundColor: "#000000",
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#444444",
     marginBottom: 10,
   },
   username: {
-    color: "#007BFF",
+    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "bold",
   },

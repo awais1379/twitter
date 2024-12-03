@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import {
   getFirestore,
   collection,
@@ -44,7 +45,10 @@ export default function UserProfileScreen({ route }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>@{username}'s Tweets</Text>
+      <View style={styles.header}>
+        <Ionicons name="person-circle" size={50} color="#FFFFFF" />
+        <Text style={styles.title}>@{username}'s Tweets</Text>
+      </View>
       {userTweets.length > 0 ? (
         <FlatList
           data={userTweets}
@@ -62,13 +66,18 @@ export default function UserProfileScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#31263E",
+    backgroundColor: "#1A1A1A", // Dark background
     padding: 20,
+  },
+  header: {
+    alignItems: "center",
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
     color: "#FFFFFF",
-    marginBottom: 20,
+    marginTop: 10,
+    fontWeight: "bold",
     textAlign: "center",
   },
   list: {

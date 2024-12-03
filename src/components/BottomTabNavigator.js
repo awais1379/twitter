@@ -12,11 +12,12 @@ export default function BottomTabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarStyle: {
-          backgroundColor: "#31263E",
+          backgroundColor: "#FFFFFF", // White background for tab bar
           borderTopWidth: 0,
         },
-        tabBarActiveTintColor: "#FFFFFF",
-        tabBarInactiveTintColor: "#AAAAAA",
+        tabBarShowLabel: false, // Remove icon names
+        tabBarActiveTintColor: "#000000", // Black color for active icons
+        tabBarInactiveTintColor: "#000000", // Black color for inactive icons
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
@@ -32,13 +33,21 @@ export default function BottomTabNavigator() {
         },
       })}
     >
-      <Tab.Screen name="Feed" component={FeedScreen} options={{ headerShown: false }}/>
+      <Tab.Screen
+        name="Feed"
+        component={FeedScreen}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen
         name="Search"
         component={SearchStack}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
     </Tab.Navigator>
   );
 }

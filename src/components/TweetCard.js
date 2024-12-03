@@ -17,6 +17,7 @@ import {
   deleteDoc,
   getDoc,
 } from "firebase/firestore";
+import { Ionicons } from "@expo/vector-icons";
 
 const db = getFirestore();
 
@@ -35,11 +36,6 @@ export default function TweetCard({ tweet, onTweetUpdated, onTweetDeleted }) {
         const userDoc = await getDoc(doc(db, "users", tweet.userId));
         if (userDoc.exists()) {
           setUsername(userDoc.data().username || "Anonymous");
-        } else {
-          console.warn(
-            "User document does not exist for userId:",
-            tweet.userId
-          );
         }
       } catch (error) {
         console.error("Error fetching username:", error);
@@ -87,20 +83,18 @@ export default function TweetCard({ tweet, onTweetUpdated, onTweetDeleted }) {
 
   return (
     <View style={styles.tweetContainer}>
-      <Text style={styles.tweetUsername}>@{username}</Text>
+      <View style={styles.header}>
+        <Text style={styles.tweetUsername}>@{username}</Text>
+        {isUserTweet && (
+          <TouchableOpacity onPress={() => setMenuVisible(true)}>
+            <Ionicons name="ellipsis-vertical" size={20} color="#AAAAAA" />
+          </TouchableOpacity>
+        )}
+      </View>
       <Text style={styles.tweetContent}>{tweet.content}</Text>
       <Text style={styles.tweetTimestamp}>
         {new Date(tweet.timestamp?.toDate()).toLocaleString()}
       </Text>
-
-      {isUserTweet && (
-        <TouchableOpacity
-          style={styles.menuButton}
-          onPress={() => setMenuVisible(true)}
-        >
-          <Text style={styles.menuButtonText}>...</Text>
-        </TouchableOpacity>
-      )}
 
       {/* Edit/Delete Modal */}
       <Modal
@@ -113,23 +107,24 @@ export default function TweetCard({ tweet, onTweetUpdated, onTweetDeleted }) {
           <View style={styles.modalContent}>
             {!isEditing ? (
               <>
-                <Button
-                  title="Edit"
-                  onPress={() => {
-                    setIsEditing(true);
-                  }}
-                  color="#007BFF"
-                />
-                <Button
-                  title="Delete"
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={() => setIsEditing(true)}
+                >
+                  <Text style={styles.modalButtonText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.deleteButton]}
                   onPress={handleDeleteTweet}
-                  color="#FF4D4F"
-                />
-                <Button
-                  title="Cancel"
+                >
+                  <Text style={styles.modalButtonText}>Delete</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.modalButton}
                   onPress={() => setMenuVisible(false)}
-                  color="#AAAAAA"
-                />
+                >
+                  <Text style={styles.modalButtonText}>Cancel</Text>
+                </TouchableOpacity>
               </>
             ) : (
               <>
@@ -139,20 +134,23 @@ export default function TweetCard({ tweet, onTweetUpdated, onTweetDeleted }) {
                   onChangeText={setNewContent}
                   maxLength={160}
                   placeholder="Edit your tweet"
+                  placeholderTextColor="#AAAAAA"
                 />
-                <Button
-                  title="Update"
+                <TouchableOpacity
+                  style={styles.modalButton}
                   onPress={handleUpdateTweet}
-                  color="#007BFF"
-                />
-                <Button
-                  title="Cancel"
+                >
+                  <Text style={styles.modalButtonText}>Update</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.deleteButton]}
                   onPress={() => {
                     setIsEditing(false);
                     setMenuVisible(false);
                   }}
-                  color="#FF4D4F"
-                />
+                >
+                  <Text style={styles.modalButtonText}>Cancel</Text>
+                </TouchableOpacity>
               </>
             )}
           </View>
@@ -164,37 +162,33 @@ export default function TweetCard({ tweet, onTweetUpdated, onTweetDeleted }) {
 
 const styles = StyleSheet.create({
   tweetContainer: {
-    backgroundColor: "#44355B",
-    borderRadius: 10,
+    backgroundColor: "#1A1A1A", // Dark grey background
+    borderRadius: 8,
     padding: 15,
     marginBottom: 10,
-    position: "relative",
+    borderWidth: 1, // Add border
+    borderColor: "#FFFFFF", // White border color
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   tweetUsername: {
-    color: "#007BFF",
+    color: "#FFFFFF",
     fontWeight: "bold",
-    fontSize: 14,
-    marginBottom: 5,
+    fontSize: 16,
   },
   tweetContent: {
     color: "#FFFFFF",
     fontSize: 16,
-    marginBottom: 10,
+    marginTop: 10,
   },
   tweetTimestamp: {
     color: "#AAAAAA",
     fontSize: 12,
+    marginTop: 5,
     textAlign: "right",
-  },
-  menuButton: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-  },
-  menuButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "bold",
   },
   modalContainer: {
     flex: 1,
@@ -203,19 +197,37 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.8)",
   },
   modalContent: {
-    width: "80%",
-    backgroundColor: "#FFFFFF",
+    width: "90%",
+    backgroundColor: "#1A1A1A",
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
   },
+  modalButton: {
+    backgroundColor: "#444444",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginVertical: 10,
+    width: 100,
+    justifyContent: "center", // Center content inside button
+    alignItems: "center",
+  },
+  deleteButton: {
+    backgroundColor: "#FF4D4F",
+  },
+  modalButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
   input: {
     width: "100%",
-    height: 40,
-    borderWidth: 1,
-    borderColor: "#AAAAAA",
-    marginBottom: 10,
+    backgroundColor: "#000000",
     borderRadius: 5,
     padding: 10,
+    color: "#FFFFFF",
+    marginBottom: 10,
   },
 });

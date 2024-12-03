@@ -3,13 +3,14 @@ import {
   View,
   Text,
   TextInput,
-  Button,
+  TouchableOpacity,
   StyleSheet,
   Alert,
   ActivityIndicator,
 } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
+import { Ionicons } from "@expo/vector-icons";
 import {
   getFirestore,
   collection,
@@ -109,9 +110,17 @@ export default function SignupScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {/* Twitter Icon */}
+      <Ionicons
+        name="logo-twitter"
+        size={100}
+        color="#FFFFFF"
+        style={styles.icon}
+      />
       <Text style={styles.title}>Sign Up</Text>
       <TextInput
         placeholder="Email"
+        placeholderTextColor="#AAAAAA"
         value={email}
         onChangeText={setEmail}
         style={styles.input}
@@ -120,6 +129,7 @@ export default function SignupScreen({ navigation }) {
       />
       <TextInput
         placeholder="Password"
+        placeholderTextColor="#AAAAAA"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -127,6 +137,7 @@ export default function SignupScreen({ navigation }) {
       />
       <TextInput
         placeholder="Username"
+        placeholderTextColor="#AAAAAA"
         value={username}
         onChangeText={setUsername}
         style={styles.input}
@@ -137,13 +148,13 @@ export default function SignupScreen({ navigation }) {
       {loading ? (
         <ActivityIndicator size="large" color="#007BFF" />
       ) : (
-        <View style={styles.buttonContainer}>
-          <Button title="Sign Up" onPress={handleSignup} color="#007BFF" />
-        </View>
+        <TouchableOpacity style={styles.button} onPress={handleSignup}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
       )}
-      <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
-        Already have an account? Log in
-      </Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <Text style={styles.linkText}>Already have an account? Log in</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -153,34 +164,48 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#31263E",
+    backgroundColor: "#000000", // Black background
     padding: 20,
   },
+  icon: {
+    marginBottom: 20, // Add spacing below the icon
+  },
   title: {
-    fontSize: 24,
-    color: "#FFFFFF",
-    marginBottom: 20,
+    fontSize: 28,
+    color: "#FFFFFF", // White title
+    marginBottom: 30,
+    fontWeight: "bold",
   },
   input: {
     width: "100%",
-    padding: 10,
+    padding: 15,
     marginVertical: 10,
-    backgroundColor: "#44355B",
-    borderRadius: 5,
-    color: "#FFFFFF",
+    backgroundColor: "#1A1A1A", // Dark grey input background
+    borderRadius: 8,
+    color: "#FFFFFF", // White text
+    fontSize: 16,
   },
   validationMessage: {
-    color: "#FF4D4F", // Error message in red
+    color: "#FF4D4F", // Red for error messages
     marginVertical: 10,
     textAlign: "center",
+    fontSize: 14,
   },
-  buttonContainer: {
-    width: "100%",
+  button: {
+    backgroundColor: "#FFFFFF", // White button
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    marginVertical: 20,
+  },
+  buttonText: {
+    color: "#000000", // Black text for the button
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  linkText: {
+    color: "#AAAAAA", // Grey text for link
+    fontSize: 14,
     marginTop: 10,
-  },
-  link: {
-    color: "#44355B",
-    marginTop: 20,
-    textAlign: "center",
   },
 });
