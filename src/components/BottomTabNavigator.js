@@ -12,12 +12,12 @@ export default function BottomTabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarStyle: {
-          backgroundColor: "#FFFFFF", // White background for tab bar
+          backgroundColor: "#FFFFFF",
           borderTopWidth: 0,
         },
-        tabBarShowLabel: false, // Remove icon names
-        tabBarActiveTintColor: "#000000", // Black color for active icons
-        tabBarInactiveTintColor: "#000000", // Black color for inactive icons
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: "#000000",
+        tabBarInactiveTintColor: "#000000",
         tabBarIcon: ({ color, size }) => {
           let iconName;
 

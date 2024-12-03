@@ -29,7 +29,6 @@ export default function TweetCard({ tweet, onTweetUpdated, onTweetDeleted }) {
 
   const currentUser = auth.currentUser;
 
-  // Fetch username from Firestore
   useEffect(() => {
     const fetchUsername = async () => {
       try {
@@ -71,7 +70,7 @@ export default function TweetCard({ tweet, onTweetUpdated, onTweetDeleted }) {
     try {
       const tweetRef = doc(db, "tweets", tweet.id);
       await deleteDoc(tweetRef);
-      onTweetDeleted(tweet.id); // Pass the tweet ID to the parent
+      onTweetDeleted(tweet.id);
       Alert.alert("Success", "Tweet deleted.");
     } catch (error) {
       console.error("Error deleting tweet:", error);
@@ -96,7 +95,6 @@ export default function TweetCard({ tweet, onTweetUpdated, onTweetDeleted }) {
         {new Date(tweet.timestamp?.toDate()).toLocaleString()}
       </Text>
 
-      {/* Edit/Delete Modal */}
       <Modal
         transparent
         animationType="fade"
@@ -162,12 +160,12 @@ export default function TweetCard({ tweet, onTweetUpdated, onTweetDeleted }) {
 
 const styles = StyleSheet.create({
   tweetContainer: {
-    backgroundColor: "#1A1A1A", // Dark grey background
+    backgroundColor: "#1A1A1A",
     borderRadius: 8,
     padding: 15,
     marginBottom: 10,
-    borderWidth: 1, // Add border
-    borderColor: "#FFFFFF", // White border color
+    borderWidth: 1,
+    borderColor: "#FFFFFF",
   },
   header: {
     flexDirection: "row",
@@ -210,7 +208,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 10,
     width: 100,
-    justifyContent: "center", // Center content inside button
+    justifyContent: "center",
     alignItems: "center",
   },
   deleteButton: {

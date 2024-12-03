@@ -70,7 +70,6 @@ export default function FeedScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Tweets List */}
       <FlatList
         data={tweets}
         renderItem={({ item }) => (
@@ -83,7 +82,6 @@ export default function FeedScreen() {
         keyExtractor={(item) => item.id}
       />
 
-      {/* Add Tweet Button */}
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => setModalVisible(true)}
@@ -91,7 +89,6 @@ export default function FeedScreen() {
         <Ionicons name="add" size={32} color="#FFFFFF" />
       </TouchableOpacity>
 
-      {/* Add Tweet Modal */}
       <Modal visible={isModalVisible} animationType="slide" transparent>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -125,13 +122,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: "#1A1A1A", // Match dark grey theme
+    backgroundColor: "#1A1A1A",
   },
   addButton: {
     position: "absolute",
     bottom: 20,
     right: 20,
-    backgroundColor: "#444444", // Dark grey button
+    backgroundColor: "#444444",
     width: 60,
     height: 60,
     borderRadius: 30,
@@ -147,7 +144,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.8)", // Semi-transparent background
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
   },
   modalContent: {
     width: "90%",

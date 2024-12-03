@@ -44,7 +44,6 @@ export default function SignupScreen({ navigation }) {
       return false;
     }
 
-    // Check username uniqueness
     const q = query(
       collection(db, "users"),
       where("username", "==", username.trim())
@@ -55,12 +54,12 @@ export default function SignupScreen({ navigation }) {
       return false;
     }
 
-    setValidationMessage(""); // Clear validation message
+    setValidationMessage("");
     return true;
   };
 
   const handleSignup = async () => {
-    setValidationMessage(""); // Clear previous messages
+    setValidationMessage("");
     setLoading(true);
 
     try {
@@ -70,7 +69,6 @@ export default function SignupScreen({ navigation }) {
         return;
       }
 
-      // Create user with Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email.trim(),
@@ -78,18 +76,17 @@ export default function SignupScreen({ navigation }) {
       );
       const user = userCredential.user;
 
-      // Add user to Firestore
-      const userDoc = doc(db, "users", user.uid); // Use UID as document ID for easy lookups
+      const userDoc = doc(db, "users", user.uid);
       await setDoc(userDoc, {
         userId: user.uid,
         username: username.trim(),
         email: email.trim(),
-        createdAt: new Date(), // Optional: Store account creation timestamp
+        createdAt: new Date(),
       });
 
       setLoading(false);
       Alert.alert("Success", "Your account has been created!");
-      navigation.replace("Main"); // Navigate to Main screen
+      navigation.replace("Main");
     } catch (error) {
       setLoading(false);
       switch (error.code) {
@@ -110,7 +107,6 @@ export default function SignupScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Twitter Icon */}
       <Ionicons
         name="logo-twitter"
         size={100}
@@ -164,15 +160,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#000000", // Black background
+    backgroundColor: "#000000",
     padding: 20,
   },
   icon: {
-    marginBottom: 20, // Add spacing below the icon
+    marginBottom: 20,
   },
   title: {
     fontSize: 28,
-    color: "#FFFFFF", // White title
+    color: "#FFFFFF",
     marginBottom: 30,
     fontWeight: "bold",
   },
@@ -180,31 +176,31 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 15,
     marginVertical: 10,
-    backgroundColor: "#1A1A1A", // Dark grey input background
+    backgroundColor: "#1A1A1A",
     borderRadius: 8,
-    color: "#FFFFFF", // White text
+    color: "#FFFFFF",
     fontSize: 16,
   },
   validationMessage: {
-    color: "#FF4D4F", // Red for error messages
+    color: "#FF4D4F",
     marginVertical: 10,
     textAlign: "center",
     fontSize: 14,
   },
   button: {
-    backgroundColor: "#FFFFFF", // White button
+    backgroundColor: "#FFFFFF",
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 8,
     marginVertical: 20,
   },
   buttonText: {
-    color: "#000000", // Black text for the button
+    color: "#000000",
     fontSize: 16,
     fontWeight: "bold",
   },
   linkText: {
-    color: "#AAAAAA", // Grey text for link
+    color: "#AAAAAA",
     fontSize: 14,
     marginTop: 10,
   },

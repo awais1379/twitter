@@ -8,7 +8,7 @@ export default function SettingsScreen({ navigation }) {
     auth
       .signOut()
       .then(() => {
-        navigation.replace("Login"); // Navigate back to login screen
+        navigation.replace("Login");
       })
       .catch((error) => {
         console.error("Sign-out error:", error);

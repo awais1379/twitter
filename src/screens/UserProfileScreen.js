@@ -66,7 +66,7 @@ export default function UserProfileScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1A1A1A", // Dark background
+    backgroundColor: "#1A1A1A",
     padding: 20,
   },
   header: {

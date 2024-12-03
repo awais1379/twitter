@@ -20,16 +20,16 @@ export default function DrawerNavigator() {
     <Drawer.Navigator
       screenOptions={({ route }) => ({
         drawerStyle: {
-          backgroundColor: "#FFFFFF", // White background
+          backgroundColor: "#FFFFFF",
         },
-        drawerActiveTintColor: "#000000", // Black active text
-        drawerInactiveTintColor: "#AAAAAA", // Grey inactive text
-        headerTitle: () => <CustomHeader />, // Custom header with the Twitter logo
-        headerTitleAlign: "center", // Center the title explicitly
+        drawerActiveTintColor: "#000000",
+        drawerInactiveTintColor: "#AAAAAA",
+        headerTitle: () => <CustomHeader />,
+        headerTitleAlign: "center",
         headerStyle: {
-          backgroundColor: "#FFFFFF", // White background for header
-          shadowOpacity: 0, // Remove shadow
-          elevation: 0, // Remove elevation for Android
+          backgroundColor: "#FFFFFF",
+          shadowOpacity: 0,
+          elevation: 0,
         },
         drawerIcon: ({ color, size }) => {
           let iconName;
@@ -51,8 +51,8 @@ export default function DrawerNavigator() {
 const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
-    justifyContent: "center", // Center the logo horizontally
-    alignItems: "center", // Center the logo vertically
+    justifyContent: "center",
+    alignItems: "center",
     flex: 1,
   },
 });

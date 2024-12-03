@@ -21,7 +21,7 @@ import {
 const db = getFirestore();
 
 export default function LoginScreen({ navigation }) {
-  const [input, setInput] = useState(""); // Can be email or username
+  const [input, setInput] = useState("");
   const [password, setPassword] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
 
@@ -32,7 +32,7 @@ export default function LoginScreen({ navigation }) {
       );
       return false;
     }
-    setValidationMessage(""); // Clear validation message
+    setValidationMessage("");
     return true;
   };
 
@@ -46,18 +46,17 @@ export default function LoginScreen({ navigation }) {
       throw new Error("No account found with this username.");
     }
     const userData = querySnapshot.docs[0].data();
-    return userData.email; // Return the email associated with the username
+    return userData.email;
   };
 
   const handleLogin = async () => {
     if (!validateFields()) return;
 
-    let email = input.trim(); // Default to email
+    let email = input.trim();
 
-    // Check if input is a username (not an email)
     if (!/\S+@\S+\.\S+/.test(input)) {
       try {
-        email = await fetchEmailFromUsername(input); // Convert username to email
+        email = await fetchEmailFromUsername(input);
       } catch (error) {
         setValidationMessage(error.message);
         return;
@@ -66,7 +65,7 @@ export default function LoginScreen({ navigation }) {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigation.replace("Main"); // Navigate to Main screen
+      navigation.replace("Main");
     } catch (error) {
       switch (error.code) {
         case "auth/invalid-email":
@@ -86,7 +85,6 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Twitter Icon */}
       <Ionicons
         name="logo-twitter"
         size={100}
@@ -128,15 +126,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#000000", // Black background
+    backgroundColor: "#000000",
     padding: 20,
   },
   icon: {
-    marginBottom: 20, // Add spacing below the icon
+    marginBottom: 20,
   },
   title: {
     fontSize: 28,
-    color: "#FFFFFF", // White title
+    color: "#FFFFFF",
     marginBottom: 30,
     fontWeight: "bold",
   },
@@ -144,31 +142,31 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 15,
     marginVertical: 10,
-    backgroundColor: "#1A1A1A", // Dark grey input background
+    backgroundColor: "#1A1A1A",
     borderRadius: 8,
-    color: "#FFFFFF", // White text
+    color: "#FFFFFF",
     fontSize: 16,
   },
   validationMessage: {
-    color: "#FF4D4F", // Red for error messages
+    color: "#FF4D4F",
     marginVertical: 10,
     textAlign: "center",
     fontSize: 14,
   },
   button: {
-    backgroundColor: "#FFFFFF", // White button
+    backgroundColor: "#FFFFFF",
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 8,
     marginVertical: 20,
   },
   buttonText: {
-    color: "#000000", // Black text for the button
+    color: "#000000",
     fontSize: 16,
     fontWeight: "bold",
   },
   linkText: {
-    color: "#AAAAAA", // Grey text for link
+    color: "#AAAAAA",
     fontSize: 14,
     marginTop: 10,
   },
